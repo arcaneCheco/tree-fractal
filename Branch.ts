@@ -19,7 +19,7 @@ export default class Branch {
     this.rootPos = pos;
     this.parentPos = parent;
     this.dir = dir;
-    this.length = 1;
+    this.length = 2;
     this.count = 0;
     this.origDir = dir.clone();
   }

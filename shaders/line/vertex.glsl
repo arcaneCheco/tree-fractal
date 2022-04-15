@@ -36,11 +36,12 @@ void main() {
 
     float t = o1; 
     vec3 positiont = position * (1.0 - t) + position1 * t;
+
     vec3 viewSpacePositionT = (modelViewMatrix * vec4(positiont, 1.0)).xyz;
 
      vec4 projectedPosition = projectionMatrix * vec4(viewSpacePositionT, 1.0);
     gl_Position = projectedPosition;
 
-    gl_PointSize = 2.0;
+    gl_PointSize = 1.0;
     vUv = uv;
 }

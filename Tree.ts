@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Leaf from "./Leaf";
 import Branch from "./Branch";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 
 export default class Tree {
   leafCount: number;
@@ -26,9 +27,42 @@ export default class Tree {
     this.maxDistance = maxDistance;
     this.minDistance = minDistance;
     this.scene = scene;
-    this.setLeafs();
+    this.init();
+  }
+
+  async init() {
+    // this.setLeafs();
+    await this.setWolfLeafs();
     this.setRootBranch();
     this.growRootBranch();
+  }
+
+  setWolfLeafs() {
+    return new Promise<void>((resolve) => {
+      let loader2 = new OBJLoader();
+      loader2.load("wolf.obj", (model) => {
+        const g = model.children[0].geometry.attributes.position.array.map(
+          (num: number) => num * 30
+        );
+        console.log(g.length);
+        this.leafs = [];
+        for (let i = 0; i < g.length / 3 - 12; i = i + 2) {
+          this.leafs.push(
+            new Leaf(new THREE.Vector3(g[i * 3], g[i * 3 + 1], g[i * 3 + 2]))
+          );
+        }
+
+        const d = new THREE.Points(
+          model.children[0].geometry,
+          new THREE.MeshBasicMaterial()
+        );
+        d.scale.multiplyScalar(30);
+        this.scene.add(d);
+        resolve();
+      });
+      const l = new THREE.AmbientLight();
+      this.scene.add(l);
+    });
   }
 
   setLeafs() {

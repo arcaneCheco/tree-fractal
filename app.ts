@@ -25,7 +25,12 @@ class World {
     this.time = 0;
     this.prepareCanvas();
     window.addEventListener("resize", this.resize.bind(this));
-    this.setTree();
+
+    this.init();
+  }
+
+  async init() {
+    await this.setTree();
     this.resize();
     this.render();
   }
@@ -52,16 +57,22 @@ class World {
     this.textureLoader = new THREE.TextureLoader();
   }
 
-  setTree() {
+  async setTree() {
     this.tree = new Tree({
       leafCount: 500,
-      rootPosition: new THREE.Vector3(0, -650, 0),
-      maxDistance: 100,
-      minDistance: 1,
+      rootPosition: new THREE.Vector3(0, 10, 0),
+      maxDistance: 25,
+      minDistance: 9,
       scene: this.scene,
     });
 
-    for (let i = 0; i < 2000; i++) {
+    await new Promise<void>((resolve) => {
+      window.setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+
+    for (let i = 0; i < 300; i++) {
       this.tree.grow();
     }
 
@@ -79,7 +90,7 @@ class World {
 
     const linesGeometry = new LinesGeometry(
       this.lines,
-      50000, //this.settings.pointsPerFrame,
+      500, //this.settings.pointsPerFrame,
       25, // this.settings.pointsPerLine,
       false //this.settings.useLengthSampling
     );

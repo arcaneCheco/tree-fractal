@@ -14,6 +14,7 @@
     "tweakpane": "^3.0.7"
   },
   "devDependencies": {
-    "@parcel/transformer-glsl": "^2.3.2"
+    "@parcel/transformer-glsl": "^2.3.2",
+    "@types/three": "^0.139.0"
   }
 }
