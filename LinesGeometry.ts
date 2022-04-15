@@ -1,7 +1,7 @@
 import Line from "./Line";
 import * as THREE from "three";
 
-export default class LineGeometry extends THREE.BufferGeometry {
+export default class LinesGeometry extends THREE.BufferGeometry {
   pointsPerFrame: number;
   pointsPerLine: number;
   useLengthSampling: boolean;
