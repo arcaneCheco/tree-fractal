@@ -59,10 +59,10 @@ class World {
 
   async setTree() {
     this.tree = new Tree({
-      leafCount: 500,
+      leafCount: 200,
       rootPosition: new THREE.Vector3(0, 10, 0),
       maxDistance: 25,
-      minDistance: 9,
+      minDistance: 5,
       scene: this.scene,
     });
 
@@ -72,7 +72,7 @@ class World {
       }, 1000);
     });
 
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 1500; i++) {
       this.tree.grow();
     }
 

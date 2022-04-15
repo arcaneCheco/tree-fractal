@@ -31,8 +31,8 @@ export default class Tree {
   }
 
   async init() {
-    // this.setLeafs();
-    await this.setWolfLeafs();
+    this.setLeafs();
+    // await this.setWolfLeafs();
     this.setRootBranch();
     this.growRootBranch();
   }
@@ -74,7 +74,8 @@ export default class Tree {
       //
       const theta = Math.random() * 2.0 * Math.PI;
       const phi = Math.random() * Math.PI;
-      const r = Math.random() * 80;
+      // const r = Math.random() * 80;
+      const r = 80;
       const x = r * Math.sin(phi) * Math.cos(theta);
       const y = r * Math.sin(phi) * Math.sin(theta);
       const z = r * Math.cos(phi);
@@ -111,7 +112,7 @@ export default class Tree {
     });
     this.leafsMesh = new THREE.Points(this.leafsGeometry, this.leafsMaterial);
 
-    // this.scene.add(this.leafsMesh);
+    this.scene.add(this.leafsMesh);
   }
 
   setRootBranch() {
