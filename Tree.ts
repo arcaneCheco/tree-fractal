@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Leaf from "./Leaf";
 import Branch from "./Branch";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 
 export default class Tree {
   leafCount: number;
@@ -26,9 +27,43 @@ export default class Tree {
     this.maxDistance = maxDistance;
     this.minDistance = minDistance;
     this.scene = scene;
-    this.setLeafs();
+
+    this.init();
+  }
+
+  async init() {
+    // this.setLeafs();
+    await this.setWolfLeafs();
     this.setRootBranch();
-    this.growRootBranch();
+    // this.growRootBranch();
+  }
+
+  setWolfLeafs() {
+    return new Promise<void>((resolve) => {
+      let loader2 = new OBJLoader();
+      loader2.load("wolf.obj", (model) => {
+        const g = model.children[0].geometry.attributes.position.array.map(
+          (num: number) => num * 30
+        );
+        console.log(g.length);
+        this.leafs = [];
+        for (let i = 0; i < g.length / 3; i = i + 1) {
+          this.leafs.push(
+            new Leaf(new THREE.Vector3(g[i * 3], g[i * 3 + 1], g[i * 3 + 2]))
+          );
+        }
+
+        const d = new THREE.Mesh(
+          model.children[0].geometry,
+          new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.3 })
+        );
+        d.scale.multiplyScalar(30);
+        this.scene.add(d);
+        resolve();
+      });
+      const l = new THREE.AmbientLight();
+      this.scene.add(l);
+    });
   }
 
   setLeafs() {
@@ -40,7 +75,8 @@ export default class Tree {
       //
       const theta = Math.random() * 2.0 * Math.PI;
       const phi = Math.random() * Math.PI;
-      const r = Math.random() * 80;
+      // const r = Math.random() * 80;
+      const r = 80 - Math.random() * 10;
       const x = r * Math.sin(phi) * Math.cos(theta);
       const y = r * Math.sin(phi) * Math.sin(theta);
       const z = r * Math.cos(phi);
@@ -85,7 +121,7 @@ export default class Tree {
     this.rootBranch = new Branch({
       pos: this.rootPosition,
       parent: null,
-      dir: new THREE.Vector3(0, 1, 0),
+      dir: new THREE.Vector3(1, 0.5, 0).normalize(),
     });
     this.branches.push(this.rootBranch);
 
@@ -140,6 +176,7 @@ export default class Tree {
         // find closest branch to leave
         for (let j = 0; j < this.branches.length; j++) {
           const branch = this.branches[j];
+          // console.log(branch);
           const dist = branch.pos.distanceTo(leaf.pos);
           if (dist < this.minDistance) {
             // reached a leaf
@@ -166,12 +203,12 @@ export default class Tree {
     for (let i = 0; i < this.leafs.length; i++) {
       if (this.leafs[i].reached) {
         // this.leafs.splice(i, 1);
-        this.leafColors[i * 3] = 0;
-        this.leafColors[i * 3 + 1] = 0;
-        this.leafColors[i * 3 + 2] = 0;
-        this.leafPositions[i * 3] = 1000000;
-        this.leafColors[i * 3 + 1] = 1000000;
-        this.leafColors[i * 3 + 2] = 1000000;
+        // this.leafColors[i * 3] = 0;
+        // this.leafColors[i * 3 + 1] = 0;
+        // this.leafColors[i * 3 + 2] = 0;
+        // this.leafPositions[i * 3] = 1000000;
+        // this.leafPositions[i * 3 + 1] = 1000000;
+        // this.leafPositions[i * 3 + 2] = 1000000;
       }
     }
     // console.log(this.leafs);
@@ -209,8 +246,8 @@ export default class Tree {
         this.branchPositions[i * 6 + 5] = branch.parent.pos.z;
 
         this.branchesMesh.geometry.attributes.position.needsUpdate = true;
-        this.leafsMesh.geometry.attributes.position.needsUpdate = true;
-        this.leafsMesh.geometry.attributes.color.needsUpdate = true;
+        // this.leafsMesh.geometry.attributes.position.needsUpdate = true;
+        // this.leafsMesh.geometry.attributes.color.needsUpdate = true;
       }
     }
   }

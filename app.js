@@ -13,7 +13,14 @@ class World {
     this.time = 0;
     this.prepareCanvas();
     window.addEventListener("resize", this.resize.bind(this));
-    this.setTree();
+    this.init();
+  }
+
+  async init() {
+    console.log("hi");
+    await this.setTree();
+    // this.setTree();
+    console.log("nye");
     this.resize();
     this.render();
   }
@@ -35,18 +42,26 @@ class World {
     // this.renderer.setClearColor(0x000000);
     this.container.appendChild(this.renderer.domElement);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.camera.position.z = 240;
+    this.camera.position.z = 130;
+    // this.camera.position.x = 80;
+    this.camera.position.y = 30;
+    // this.camera.lookAt(new THREE.Vector3(0, 35, 0));
     // this.debug = new Pane();
     this.textureLoader = new THREE.TextureLoader();
   }
 
-  setTree() {
+  async setTree() {
     this.tree = new Tree({
       leafCount: 500,
-      rootPosition: new THREE.Vector3(0, -650, 0),
-      maxDistance: 100,
+      rootPosition: new THREE.Vector3(-60, 30, 0),
+      maxDistance: 15,
       minDistance: 1,
       scene: this.scene,
+    });
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve();
+      }, 1000);
     });
   }
 
@@ -66,6 +81,7 @@ class World {
 
   update() {
     this.tree.grow();
+    this.scene.rotation.y += 0.001;
   }
 
   render() {
